@@ -1,0 +1,148 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentic-ai-playbook"
+version = "1.0.0"
+description = "Complete learning system for building production AI agents"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Prayag Tushar", email = "t.prayag.eng@gmail.com"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.11"
+
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+]
+
+[project.optional-dependencies]
+# Individual frameworks
+langgraph = [
+    "langgraph>=0.4.0",
+    "langchain>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langchain-anthropic>=0.2.0",
+]
+
+crewai = [
+    "crewai>=0.105.0",
+    "crewai-tools>=0.37.0",
+]
+
+autogen = [
+    "ag2>=1.0.0",
+    "pyautogen>=0.8.0",
+]
+
+llamaindex = [
+    "llama-index>=0.12.0",
+    "llama-index-agent-openai>=0.4.0",
+    "llama-index-tools-search>=0.3.0",
+]
+
+openai-agents = [
+    "openai-agents>=0.1.0",
+    "openai>=1.60.0",
+]
+
+pydantic-ai = [
+    "pydantic-ai>=0.0.50",
+    "pydantic>=2.10.0",
+]
+
+# Vector databases
+vectordb = [
+    "chromadb>=0.6.0",
+    "qdrant-client>=1.12.0",
+    "pgvector>=0.2.0",
+]
+
+# Production / Deployment
+deploy = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "docker>=7.0.0",
+    "gunicorn>=23.0.0",
+    "celery>=5.4.0",
+    "redis>=5.2.0",
+]
+
+# Observability
+observe = [
+    "langsmith>=0.2.0",
+    "langfuse>=2.50.0",
+    "prometheus-client>=0.21.0",
+    "opentelemetry-api>=1.29.0",
+]
+
+# Evaluation
+eval = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "deepeval>=2.0.0",
+    "ragas>=0.2.0",
+]
+
+# All frameworks
+all = [
+    "agentic-ai-playbook[langgraph,crewai,autogen,llamaindex,openai-agents,pydantic-ai]",
+]
+
+# Everything
+dev = [
+    "agentic-ai-playbook[all,vectordb,deploy,observe,eval]",
+    "ruff>=0.9.0",
+    "mypy>=1.14.0",
+    "black>=24.0.0",
+    "bandit>=1.8.0",
+    "safety>=3.0.0",
+    "pre-commit>=4.0.0",
+]
+
+[project.scripts]
+aap = "src.main:main"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+addopts = "-v --tb=short"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
